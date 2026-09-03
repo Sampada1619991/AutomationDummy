@@ -1,0 +1,39 @@
+# Maven build artifacts
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# IDE files
+.idea/
+*.iml
+.project
+.classpath
+.settings/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+
+# Pipeline artifacts
+pipeline-artifacts/
+logs/
+
+# Build
+build/
+dist/
+
+# Local environment
+.env
+*.local
+*.properties.local
+
+# Maven
+dependency-reduced-pom.xml
+

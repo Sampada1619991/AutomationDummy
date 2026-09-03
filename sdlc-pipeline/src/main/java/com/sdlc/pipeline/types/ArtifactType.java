@@ -1,0 +1,8 @@
+package com.sdlc.pipeline.types;
+
+public enum ArtifactType {
+    REQUIREMENTS, ARCHITECTURE, DESIGN_REVIEW, 
+    IMPLEMENTATION_PLAN, CODE, CODE_REVIEW, 
+    VERIFICATION_REPORT, CHANGELOG
+}
+
