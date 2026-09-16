@@ -1,193 +1,119 @@
 # AutomationDummy
 
-> A lightweight repository scaffold for automation and testing experiments.
+> Selenium automation examples for browser-based testing.
 
-[![Repository](https://img.shields.io/badge/repository-AutomationDummy-blue)](https://github.com/Sampada1619991/AutomationDummy)
-[![License](https://img.shields.io/badge/license-not%20specified-lightgrey)](https://github.com/Sampada1619991/AutomationDummy)
+## Project overview
 
-## Overview
-
-**AutomationDummy** is a minimal GitHub repository intended for testing automation workflows, repository integrations, and documentation-generation tooling. The repository currently contains a single Markdown file and does not include an application, library, executable, test suite, or runtime-specific implementation.
-
-This README documents the repository's current state so that users and automation agents can work with it accurately without assuming unsupported technologies or commands.
-
-## Current Status
-
-The default branch is `master`. At the time of writing, the repository contains:
-
-- `README.md` — project overview and usage documentation.
-
-No source code, package manifest, dependency configuration, CI workflow, or license file is currently committed.
+AutomationDummy contains small Selenium examples for experimenting with browser automation, locating elements, and validating scripted interactions. The examples are intentionally lightweight and should be treated as learning and test fixtures rather than production automation.
 
 ## Features
 
-- **Minimal project footprint** — useful as a clean target for automation tests.
-- **GitHub integration target** — suitable for testing repository reads, writes, branches, commits, and pull requests.
-- **Documentation-ready structure** — includes a central README that can be expanded as project functionality is added.
-- **Technology-neutral** — no language, framework, or package manager is imposed by the current contents.
+- Selenium examples for Chrome and Firefox.
+- Direct Java execution without a Maven or Gradle project.
+- Environment-variable guidance for credentials.
+- Troubleshooting notes and known limitations.
 
-## Repository Structure
+## Repository structure
 
 ```text
 AutomationDummy/
-└── README.md    # Project documentation
+├── README.md
+├── GoogleSearch.java
+└── GoogleSearchFirefox.java
 ```
 
-The repository intentionally has no additional directories or implementation files at present. Add application code, tests, workflows, or configuration files as the project evolves.
+File names may vary if the examples are reorganized; inspect the repository before compiling.
 
 ## Prerequisites
 
-For cloning and viewing the repository, you need:
+- Java Development Kit (JDK), with a version supported by the installed Selenium release.
+- Google Chrome for the Chrome example and Mozilla Firefox for the Firefox example.
+- Matching ChromeDriver and GeckoDriver binaries, or a Selenium Manager-capable Selenium setup.
+- Internet access to download Selenium dependencies and launch the browser targets.
 
-- Git 2.x or later
-- Internet access to GitHub
-- A text editor or Markdown viewer (optional)
+The repository currently has no Maven `pom.xml` or Gradle build configuration. Selenium dependencies therefore need to be supplied manually through downloaded JAR files and their transitive dependencies, or by adding a build configuration locally.
 
-There are currently no runtime, SDK, package-manager, database, or external-service requirements.
+## Selenium dependency setup
 
-## Getting Started
+Download a compatible Selenium Java distribution from the official Selenium releases or Maven Central, then include the Selenium JARs and required dependency JARs on the Java classpath. Keep browser drivers compatible with the installed browsers and ensure the driver executables are on `PATH`, or provide their locations through Selenium configuration.
 
-### Clone the repository
+Do not commit downloaded dependencies, driver binaries, or credentials to this repository.
 
-```bash
-git clone https://github.com/Sampada1619991/AutomationDummy.git
-cd AutomationDummy
-```
+## Running the examples
 
-### Inspect the repository
+Compile and run the Chrome example with a classpath containing Selenium and its dependencies:
 
 ```bash
-git status
-git branch --show-current
-cat README.md
+javac -cp "lib/*" GoogleSearch.java
+java -cp ".:lib/*" GoogleSearch
 ```
 
-### Work with the default branch
+On Windows, use `;` instead of `:` in the runtime classpath:
+
+```bat
+java -cp ".;lib/*" GoogleSearch
+```
+
+Run the Firefox example similarly:
 
 ```bash
-git checkout master
-git pull origin master
+javac -cp "lib/*" GoogleSearchFirefox.java
+java -cp ".:lib/*" GoogleSearchFirefox
 ```
 
-Because the repository currently contains documentation only, there is no application command to install or run.
+The examples open their respective browsers and perform the scripted Google sign-in/search interaction. Close the browser and terminate the process if an example does not finish cleanly.
 
-## Usage
+## Credentials and security
 
-### As an automation test target
-
-Automation tools can use this repository to validate common GitHub operations, such as:
-
-1. Reading repository metadata and files.
-2. Creating a feature branch.
-3. Adding or updating a documentation or configuration file.
-4. Committing and pushing changes.
-5. Opening a pull request against `master`.
-
-Example workflow:
+Credentials must be supplied through environment variables or another local secret-management mechanism; do not hard-code them in Java source. For example:
 
 ```bash
-git checkout -b feature/example-change
-printf "\\nAutomation test change.\\n" >> README.md
-git add README.md
-git commit -m "test: add automation example"
-git push -u origin feature/example-change
+export GOOGLE_USERNAME="your-test-account"
+export GOOGLE_PASSWORD="your-test-password"
 ```
 
-Open a pull request on GitHub after pushing the branch. Review the change before merging it into `master`.
+Never use a personal or production account for an automated sign-in test. The Google login flow may block automation, trigger additional verification, or violate service terms. Any credentials previously exposed in source history should be rotated immediately.
 
-### As a project scaffold
+## Expected behavior and known limitations
 
-To turn the repository into an executable project, add the relevant implementation files and document the following in this README:
-
-- Programming language and supported version.
-- Installation and dependency commands.
-- Configuration and environment variables.
-- Entry point and run commands.
-- Test and lint commands.
-- Deployment or release instructions.
-
-## Development Guidelines
-
-No formal contribution or coding standard is currently configured. Until project-specific guidance is added, contributors should:
-
-- Keep changes focused and clearly described.
-- Use descriptive branch and commit names.
-- Update this README when adding functionality or changing setup steps.
-- Avoid committing secrets, credentials, generated artifacts, or local machine files.
-- Test automation changes against a safe branch before modifying `master`.
-
-## Testing
-
-There is currently no automated test suite or test command in the repository. For documentation-only changes, verify that:
-
-- Markdown renders correctly on GitHub.
-- Links resolve to the intended locations.
-- Shell commands are syntactically correct for the stated platform.
-- The documented repository state matches the committed files.
-
-## Configuration and Security
-
-No configuration files or environment variables are currently required. If automation integrations are added later:
-
-- Store credentials in GitHub Actions secrets or an equivalent secret manager.
-- Use least-privilege tokens.
-- Never commit access tokens, passwords, private keys, or environment files containing secrets.
-- Document variable names and safe example values, but not real credentials.
+- A browser window is launched and controlled through Selenium.
+- Results depend on network connectivity, browser versions, driver compatibility, and Google account state.
+- Google sign-in is not a stable automation target: CAPTCHA, MFA, consent screens, bot detection, and UI changes can interrupt the flow.
+- The Google sign-in selectors in the examples are outdated and may no longer identify the intended controls.
+- Headless execution, retries, explicit waits, assertions, and reliable cleanup are not guaranteed by the current examples.
+- Because no Maven or Gradle configuration exists, setup is manual and classpath errors are possible.
 
 ## Troubleshooting
 
-### GitHub reports that the repository cannot be found
+### Driver is not found
 
-Confirm the clone URL and ensure that your GitHub account has access to the repository:
+Install the matching driver, place it on `PATH`, or configure its absolute path. Verify the browser and driver versions are compatible.
 
-```bash
-git remote -v
-git ls-remote https://github.com/Sampada1619991/AutomationDummy.git
-```
+### Class or dependency errors
 
-### There is no command to run
+Confirm that every Selenium and transitive dependency JAR is present in `lib/` and that the classpath syntax matches the operating system.
 
-This is expected in the current repository state. Only `README.md` is present; no executable project has been committed yet.
+### Element cannot be located
 
-### A change is not visible after pulling
+The Google page may have changed, or a sign-in step may have redirected to a consent, CAPTCHA, or verification page. Inspect the page manually and replace outdated selectors with stable locators and explicit waits.
 
-Check the active branch and fetch the latest remote references:
+### Login is blocked
 
-```bash
-git branch --show-current
-git fetch origin
-git pull origin master
-```
+Use a dedicated test account, review Google security notifications, and expect that automated sign-in may be rejected. Do not attempt to bypass CAPTCHA or other security controls.
+
+## Recommended improvements
+
+- Add Maven or Gradle dependency management.
+- Replace hard-coded or outdated selectors with maintained page objects.
+- Use explicit waits, assertions, structured logging, and `try/finally` browser cleanup.
+- Parameterize browser, base URL, and test data.
+- Add CI-safe tests that do not require real credentials or third-party login.
+- Store secrets in CI secret storage and add a clear license.
 
 ## Contributing
 
-Contributions are welcome when they improve the repository's usefulness as an automation or testing target.
+Keep changes focused, document setup changes, and avoid committing secrets, browser binaries, generated artifacts, or local configuration. Validate documentation and, where practical, run examples with a dedicated test account before opening a pull request.
 
-1. Fork the repository or create a feature branch.
-2. Make a focused change.
-3. Verify the change locally.
-4. Commit with a descriptive message.
-5. Push the branch and open a pull request against `master`.
-6. Describe what changed and how it was verified.
+## License and usage disclaimer
 
-## License
-
-No license file or explicit license declaration is currently included. Until a license is added, copyright remains with the repository owner and reuse should not be assumed. If this project is intended for public reuse, add a `LICENSE` file with the selected license terms.
-
-## Maintainer and Support
-
-The repository is maintained by [Sampada1619991](https://github.com/Sampada1619991). For questions, bug reports, or automation-related requests, open a [GitHub issue](https://github.com/Sampada1619991/AutomationDummy/issues).
-
-## Roadmap
-
-Possible future additions include:
-
-- A sample application or automation fixture.
-- Automated tests demonstrating repository actions.
-- GitHub Actions workflows for validation.
-- Contribution guidelines and a license.
-- Examples for supported automation integrations.
-
----
-
-This README reflects the files currently present in the `master` branch. Update it as soon as implementation code or project configuration is added.
+No explicit license file is currently included. Copyright and reuse permissions should not be assumed until a license is added. This project is provided for educational and testing purposes; users are responsible for complying with Selenium, browser, Google, and organizational policies.
